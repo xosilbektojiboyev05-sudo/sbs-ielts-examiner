@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from groq import Groq
@@ -15,6 +15,13 @@ client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # Testlar bazasi (xotirada saqlash uchun)
 tests_db = []
+
+
+# --- BOSHI SAHIFA ROUTI ---
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 
 # --- ADMIN PANEL UCHUN YO'LLAR ---
@@ -193,7 +200,7 @@ criteria. Be specific, evidence-based and fair.
                     "content": full_prompt
                 }
             ],
-            model="openai/gpt-oss-20b",  # Groq uchun to'g'ri va ishlaydigan model
+            model="openai/gpt-oss-20b",
             temperature=0.2,
             max_tokens=3500
         )
@@ -228,7 +235,6 @@ def ai_evaluate_speaking():
         part3 = str(data.get('part3') or '').strip()
         audio_transcript = str(data.get('transcript') or '').strip()
 
-        # Hech bo'lmasa bitta javob bo'lishi kerak
         if not any([part1, part2, part3, audio_transcript]):
             return jsonify({
                 "success": False,
@@ -354,7 +360,7 @@ Keyingi bandga chiqish uchun uchta aniq tavsiya.
                     "content": full_prompt
                 }
             ],
-            model="openai/gpt-oss-20b",  # Groq uchun ishlaydigan to'g'ri model
+            model="openai/gpt-oss-20b",
             temperature=0.2,
             max_tokens=3500
         )
