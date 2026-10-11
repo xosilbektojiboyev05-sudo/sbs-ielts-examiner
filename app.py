@@ -4,7 +4,7 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from groq import Groq
 
-app = Flask(__name__, template_folder='.', static_folder='.')
+app = Flask(__name__)
 
 UPLOAD_FOLDER = 'assets/images'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
