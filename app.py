@@ -5,7 +5,6 @@ from werkzeug.utils import secure_filename
 from groq import Groq
 
 app = Flask(__name__)
-
 UPLOAD_FOLDER = 'assets/images'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -21,6 +20,12 @@ tests_db = []
 @app.route('/')
 def home():
     return render_template('index.html')
+from flask import send_from_directory
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'assets/images'),
+                               'logophoto.png', mimetype='image/png')
 
 
 # --- ADMIN PANEL UCHUN YO'LLAR ---
