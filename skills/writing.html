@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Writing Test - SBS IELTS Examiner</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #333333;
+        --border-color: #e0e0e0;
+        --primary-color: #059669;
+        --secondary-bg: #f8f9fa;
+        --telegram-color: #2481cc;
+        --font-size: 16px;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        font-size: var(--font-size);
+        padding-top: 60px;
+        height: 100vh;
+        overflow: hidden;
+      }
+      .header {
+        background-color: var(--bg-color);
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 60px;
+      }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .ielts-text-logo {
+        font-size: 28px;
+        font-weight: 900;
+        color: #008000;
+        letter-spacing: -1px;
+      }
+      .telegram-link {
+        color: var(--telegram-color);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .workspace {
+        display: flex;
+        height: calc(100vh - 60px);
+        width: 100%;
+      }
+      .left-panel {
+        width: 50%;
+        height: 100%;
+        padding: 20px;
+        overflow-y: auto;
+        border-right: 1px solid var(--border-color);
+        background: var(--secondary-bg);
+      }
+      .right-panel {
+        width: 50%;
+        height: 100%;
+        padding: 20px;
+        overflow-y: auto;
+        background: var(--bg-color);
+      }
+
+      .task-box {
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      }
+      .task-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+      }
+
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 15px;
+        font-family: Arial, sans-serif;
+        resize: vertical;
+        outline: none;
+      }
+      textarea:focus {
+        border-color: var(--primary-color);
+      }
+
+      .btn-submit {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-weight: bold;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 15px;
+        transition: opacity 0.2s;
+      }
+      .btn-submit:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body onload="loadWritingTest()">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <div class="ielts-text-logo">IELTS</div>
+        <a href="https://t.me/SBS_stars" target="_blank" class="telegram-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-.38.24-1.07.7-.96.66-1.89 1.28-1.89 1.28s-.17.11-.49.03c-.32-.08-.72-.26-1.16-.47-.54-.26-1.17-.53-1.17-.53s-.87-.55.62-1.14c.32-.13 1.96-.84 2.99-1.2 1.05-.37 2.86-1.01 2.86-1.01s1.02-.4 1.02 0z"
+            />
+          </svg>
+          <span>@SBS_stars</span>
+        </a>
+      </div>
+      <div>
+        <a
+          href="../dashboard.html"
+          style="
+            background-color: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+          "
+          >Testni Tugatish</a
+        >
+      </div>
+    </div>
+
+    <!-- WORKSPACE -->
+    <div class="workspace">
+      <!-- CHAP PANEL -->
+      <div class="left-panel">
+        <h2 id="test-heading" style="margin-bottom: 15px; color: #333">
+          Writing Materiallari
+        </h2>
+
+        <!-- Task 1 Savol va Rasm -->
+        <div class="task-box">
+          <div class="task-title">Writing Task 1</div>
+          <p style="margin-bottom: 10px; font-size: 14px; color: #555">
+            You should spend about 20 minutes on this task. Summarise the
+            information by selecting and reporting the main features.
+          </p>
+          <div
+            id="task1-image-box"
+            style="
+              background: #eee;
+              min-height: 200px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 6px;
+              color: #777;
+              font-weight: bold;
+              overflow: hidden;
+            "
+          >
+            [Task 1 Grafik / Rasm Joyi]
+          </div>
+        </div>
+
+        <!-- Task 2 Savol Matni -->
+        <div class="task-box">
+          <div class="task-title">Writing Task 2</div>
+          <p
+            id="task2-content"
+            style="font-size: 14px; color: #555; line-height: 1.6"
+          >
+            Admin tomonidan kiritilgan savol bu yerda ko'rsatiladi...
+          </p>
+        </div>
+      </div>
+
+      <!-- O'NG PANEL -->
+      <div class="right-panel">
+        <h2 style="margin-bottom: 15px; color: #333">Javob Yozish Maydoni</h2>
+
+        <!-- Task 1 Input -->
+        <div style="margin-bottom: 20px">
+          <label
+            style="
+              display: block;
+              font-weight: bold;
+              margin-bottom: 5px;
+              color: var(--primary-color);
+            "
+            >Task 1 Javobi</label
+          >
+          <textarea
+            id="task1-input"
+            rows="7"
+            placeholder="Task 1 javobingizni shu yerga yozing..."
+          ></textarea>
+          <div style="font-size: 13px; color: #666; margin-top: 4px">
+            So'zlar soni: <span id="word-count-1">0</span> (Min: 150)
+          </div>
+        </div>
+
+        <!-- Task 2 Input -->
+        <div style="margin-bottom: 20px">
+          <label
+            style="
+              display: block;
+              font-weight: bold;
+              margin-bottom: 5px;
+              color: var(--primary-color);
+            "
+            >Task 2 Javobi</label
+          >
+          <textarea
+            id="task2-input"
+            rows="12"
+            placeholder="Task 2 javobingizni shu yerga yozing..."
+          ></textarea>
+          <div style="font-size: 13px; color: #666; margin-top: 4px">
+            So'zlar soni: <span id="word-count-2">0</span> (Min: 250)
+          </div>
+        </div>
+
+        <button class="btn-submit" onclick="submitWritingToAI()">
+          AI ga topshirish va Baholatish 🚀
+        </button>
+
+        <!-- Natija -->
+        <div
+          id="ai-feedback-result"
+          style="
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            border: 1px solid var(--border-color);
+          "
+        ></div>
+      </div>
+    </div>
+
+    <script>
+      async function loadWritingTest() {
+        try {
+          const response = await fetch("http://127.0.0.1:5000/api/get-tests");
+          const tests = await response.json();
+
+          const writingTests = tests.filter((t) => t.skill === "writing");
+          if (writingTests.length > 0) {
+            const latestTest = writingTests[writingTests.length - 1];
+
+            document.getElementById("test-heading").textContent =
+              latestTest.title;
+            if (latestTest.content) {
+              document.getElementById("task2-content").innerHTML =
+                latestTest.content.replace(/\n/g, "<br>");
+            }
+
+            // Rasmni chiqarish
+            if (latestTest.image) {
+              const imageBox = document.getElementById("task1-image-box");
+              imageBox.innerHTML = `<img src="${latestTest.image}" alt="Task 1 Chart" style="width: 100%; height: auto; object-fit: contain; border-radius: 6px;">`;
+            }
+          }
+        } catch (err) {
+          console.error("Testni yuklashda xatolik:", err);
+        }
+      }
+
+      document
+        .getElementById("task1-input")
+        .addEventListener("input", function () {
+          let words = this.value.trim()
+            ? this.value.trim().split(/\s+/).length
+            : 0;
+          document.getElementById("word-count-1").textContent = words;
+        });
+
+      document
+        .getElementById("task2-input")
+        .addEventListener("input", function () {
+          let words = this.value.trim()
+            ? this.value.trim().split(/\s+/).length
+            : 0;
+          document.getElementById("word-count-2").textContent = words;
+        });
+
+      async function submitWritingToAI() {
+        const task1 = document.getElementById("task1-input").value;
+        const task2 = document.getElementById("task2-input").value;
+        const resultBox = document.getElementById("ai-feedback-result");
+
+        if (!task1 && !task2) {
+          alert("Iltimos, kamida bitta task uchun javob yozing!");
+          return;
+        }
+
+        resultBox.style.display = "block";
+        resultBox.textContent =
+          "AI imtihon oluvchi esselaringizni tekshirmoqda, iltimos kuting...";
+
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:5000/api/ai-evaluate",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ task1: task1, task2: task2 }),
+            },
+          );
+
+          const data = await response.json();
+          if (data.success) {
+            resultBox.textContent = data.feedback;
+          } else {
+            resultBox.textContent = "Xatolik: " + data.error;
+          }
+        } catch (err) {
+          resultBox.textContent = "Server bilan aloqada xatolik yuz berdi.";
+        }
+      }
+    </script>
+  </body>
+</html>

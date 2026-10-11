@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - SBS IELTS Examiner</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body
+    onload="
+      updateAdminFormFields();
+      loadTests();
+    "
+  >
+    <!-- HEADER / NAVIGATION -->
+    <header class="header">
+      <div class="nav-container">
+        <div class="logo-box">
+          <img src="assets/images/logophoto.png" alt="SBS IELTS Logo" />
+          <span class="logo-text">SBS IELTS Examiner (Admin)</span>
+        </div>
+        <nav class="nav-menu">
+          <a href="index.html">Bosh sahifa</a>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="admin.html" class="active">Admin Panel</a>
+        </nav>
+        <div>
+          <a
+            href="login.html"
+            class="btn-login"
+            style="background-color: #ef4444"
+            >Chiqish</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- ADMIN CONTAINER -->
+    <main class="dashboard-container">
+      <div class="welcome-banner">
+        <div>
+          <h1>Admin Boshqaruv Paneli ⚙️</h1>
+          <p>
+            Bu yerdan har bir skill uchun imtihon materiallari va savollarni
+            kiritishingiz mumkin.
+          </p>
+        </div>
+      </div>
+
+      <!-- ADD QUESTION FORM SECTION -->
+      <div class="history-card" style="margin-bottom: 2rem">
+        <h2>Yangi Test / Savol Qo'shish</h2>
+
+        <form
+          id="add-question-form"
+          style="margin-top: 1.5rem"
+          onsubmit="handleAdminSubmit(event)"
+        >
+          <!-- Skill turini tanlash -->
+          <div class="form-group">
+            <label for="skill-select">Skill Turini Tanlang</label>
+            <select
+              id="skill-select"
+              class="form-control"
+              style="
+                width: 100%;
+                padding: 0.75rem;
+                border: 1px solid #d1d5db;
+                border-radius: 0.5rem;
+              "
+            >
+              <option value="writing">
+                Writing (Task 1 Rasm & Task 2 Matn)
+              </option>
+            </select>
+          </div>
+
+          <!-- Sarlavha -->
+          <div class="form-group">
+            <label for="test-title">Test Sarlavhasi / Mavzusi</label>
+            <input
+              type="text"
+              id="test-title"
+              placeholder="Masalan: Cambridge IELTS - Passage 1"
+              required
+              style="
+                width: 100%;
+                padding: 0.75rem;
+                border: 1px solid #d1d5db;
+                border-radius: 0.5rem;
+              "
+            />
+          </div>
+
+          <!-- DINAMIK QISMLAR -->
+          <div id="dynamic-fields">
+            <!-- JavaScript orqali to'ldiriladi -->
+          </div>
+
+          <button
+            type="submit"
+            class="btn-primary"
+            style="padding: 0.75rem 2rem; cursor: pointer; margin-top: 1rem"
+          >
+            Testni Bazaga Qo'shish 🚀
+          </button>
+        </form>
+      </div>
+
+      <!-- EXISTING TESTS LIST -->
+      <div class="history-card">
+        <h2>Yuklangan Testlar Ro'yxati</h2>
+        <div style="margin-top: 1rem; overflow-x: auto">
+          <table
+            style="width: 100%; border-collapse: collapse; text-align: left"
+          >
+            <thead>
+              <tr style="border-bottom: 2px solid #e5e7eb; color: #4b5563">
+                <th style="padding: 0.75rem">ID</th>
+                <th style="padding: 0.75rem">Skill</th>
+                <th style="padding: 0.75rem">Sarlavha</th>
+                <th style="padding: 0.75rem">Amallar</th>
+              </tr>
+            </thead>
+            <tbody id="tests-table-body">
+              <!-- Serverdan keladigan ma'lumotlar -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-bottom" style="margin-top: 0; border: none">
+        &copy; 2026 SBS IELTS Examiner. Barcha huquqlar himoyalangan.
+      </div>
+    </footer>
+
+    <script>
+      function updateAdminFormFields() {
+        const skill = document.getElementById("skill-select").value;
+        const container = document.getElementById("dynamic-fields");
+
+        if (skill === "writing") {
+          container.innerHTML = `
+            <div class="form-group">
+                <label>Task 1 uchun Rasm Yuklang</label>
+                <input type="file" name="file" accept="image/*" class="form-control" style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; margin-bottom: 1rem;">
+                
+                <label>Task 2 Savol Matni</label>
+                <textarea name="content" rows="4" placeholder="Task 2 savolini kiriting..." style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;"></textarea>
+            </div>
+        `;
+        } else if (skill === "speaking") {
+          container.innerHTML = `
+            <div class="form-group">
+                <label>Speaking Savollari (Part 1, 2, 3)</label>
+                <textarea name="content" rows="5" placeholder="Speaking savollarini kiriting..." style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;"></textarea>
+            </div>
+        `;
+        }
+      }
+
+      async function handleAdminSubmit(e) {
+        e.preventDefault();
+        const form = document.getElementById("add-question-form");
+        const formData = new FormData(form);
+
+        formData.append("skill", document.getElementById("skill-select").value);
+        formData.append("title", document.getElementById("test-title").value);
+
+        try {
+          const response = await fetch("http://127.0.0.1:5000/api/add-test", {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.json();
+          if (result.status === "success") {
+            alert(result.message);
+            form.reset();
+            updateAdminFormFields();
+            loadTests();
+          } else {
+            alert("Xatolik yuz berdi!");
+          }
+        } catch (error) {
+          console.error("Server xatosi:", error);
+          alert("Python serveri (`app.py`) bilan bog'lanib bo'lmadi!");
+        }
+      }
+
+      async function loadTests() {
+        try {
+          const response = await fetch("http://127.0.0.1:5000/api/get-tests");
+          const tests = await response.json();
+          const tbody = document.getElementById("tests-table-body");
+          tbody.innerHTML = "";
+
+          if (tests.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="padding: 1rem; text-align: center; color: #6b7280;">Hozircha testlar qo'shilmagan.</td></tr>`;
+            return;
+          }
+
+          tests.forEach((test) => {
+            tbody.innerHTML += `
+                        <tr style="border-bottom: 1px solid #f3f4f6;">
+                            <td style="padding: 0.75rem;">${test.id}</td>
+                            <td style="padding: 0.75rem;"><span style="background: #d1fae5; color: #065f46; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">${test.skill}</span></td>
+                            <td style="padding: 0.75rem;">${test.title}</td>
+                            <td style="padding: 0.75rem;">
+                                <button onclick="deleteTest(${test.id})" style="background: #ef4444; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer;">O'chirish</button>
+                            </td>
+                        </tr>
+                    `;
+          });
+        } catch (error) {
+          console.error("Testlarni yuklashda xatolik:", error);
+        }
+      }
+    </script>
+  </body>
+</html>

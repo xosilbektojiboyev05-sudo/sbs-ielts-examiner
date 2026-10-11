@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Speaking Test - SBS IELTS Examiner</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #333333;
+        --border-color: #e0e0e0;
+        --primary-color: #059669;
+        --secondary-bg: #f8f9fa;
+        --telegram-color: #2481cc;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        padding-top: 60px;
+        padding-bottom: 100px;
+      }
+      .header {
+        background-color: var(--bg-color);
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 60px;
+      }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .ielts-text-logo {
+        font-size: 28px;
+        font-weight: 900;
+        color: #008000;
+      }
+      .telegram-link {
+        color: var(--telegram-color);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .main-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        text-align: center;
+      }
+      .passage-box {
+        background: var(--secondary-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+      .passage-title {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+      }
+      .question-box {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 25px;
+        padding: 15px;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+      .recorder-box {
+        background: var(--bg-color);
+        border: 2px dashed var(--border-color);
+        border-radius: 8px;
+        padding: 25px;
+        margin-top: 25px;
+      }
+      .btn-record {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+      .btn-record:hover {
+        opacity: 0.9;
+      }
+      .speaking-part {
+        display: none;
+      }
+      .speaking-part.active {
+        display: block;
+      }
+      .transcript-box {
+        margin-top: 15px;
+        padding: 15px;
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        text-align: left;
+        font-size: 0.95rem;
+        min-height: 60px;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+      .nav-row {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-color);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 70px;
+        padding: 0 20px;
+        z-index: 100;
+      }
+      .nav-btn {
+        background: var(--secondary-bg);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .nav-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      #ai-feedback-result {
+        margin-top: 30px;
+        background: var(--secondary-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        text-align: left;
+        display: none;
+        white-space: pre-wrap;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <div class="ielts-text-logo">IELTS</div>
+        <a href="https://t.me/SBS_stars" target="_blank" class="telegram-link"
+          >@SBS_stars</a
+        >
+      </div>
+      <div>
+        <a
+          href="../dashboard.html"
+          style="
+            background-color: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+          "
+          >Testni Tugatish</a
+        >
+      </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="main-container">
+      <!-- PART 1 -->
+      <div id="part-1" class="speaking-part active">
+        <div class="passage-box">
+          <div class="passage-title">Speaking Part 1: Work or Studies</div>
+          <div id="p1-q-box" class="question-box">1. Where do you study?</div>
+
+          <div class="recorder-box">
+            <p
+              id="p1-timer"
+              style="font-weight: bold; margin-bottom: 10px; font-size: 1.2rem"
+            >
+              Vaqt: 30 soniya
+            </p>
+            <button
+              class="btn-record"
+              id="p1-btn"
+              onclick="togglePart1Question()"
+            >
+              Ovoz yozishni boshlash 🎙️
+            </button>
+            <p style="margin-top: 15px; font-weight: bold; text-align: left">
+              Sizning aytganlaringiz (Transcript):
+            </p>
+            <div id="transcript-1" class="transcript-box">
+              Hozircha yozuv yo'q...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PART 2 -->
+      <div id="part-2" class="speaking-part">
+        <div class="passage-box">
+          <div class="passage-title">Speaking Part 2: Cue Card</div>
+          <p style="font-weight: bold; margin-bottom: 10px">
+            Describe a place where you had a holiday / vacation
+          </p>
+          <ul style="list-style: none; margin-bottom: 15px">
+            <li>Where it was</li>
+            <li>When you went there</li>
+            <li>What you did there</li>
+            <li>And explain why you would recommend this place to others</li>
+          </ul>
+
+          <div class="recorder-box">
+            <p
+              id="timer-2"
+              style="font-weight: bold; margin-bottom: 10px; font-size: 1.2rem"
+            >
+              Tayyorgarlik vaqti: 1 daqiqa
+            </p>
+            <button class="btn-record" id="btn-2" onclick="startPart2Timer()">
+              Start / Tayyorgarlikni boshlash ⏱️
+            </button>
+            <p style="margin-top: 15px; font-weight: bold; text-align: left">
+              Sizning aytganlaringiz (Transcript):
+            </p>
+            <div id="transcript-2" class="transcript-box">
+              Hozircha yozuv yo'q...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PART 3 -->
+      <div id="part-3" class="speaking-part">
+        <div class="passage-box">
+          <div class="passage-title">Speaking Part 3: Discussion</div>
+          <div id="p3-q-box" class="question-box">
+            1. Where do people in your country often go for holidays?
+          </div>
+
+          <div class="recorder-box">
+            <p
+              id="p3-timer"
+              style="font-weight: bold; margin-bottom: 10px; font-size: 1.2rem"
+            >
+              Vaqt: 60 soniya
+            </p>
+            <button
+              class="btn-record"
+              id="p3-btn"
+              onclick="togglePart3Question()"
+            >
+              Ovoz yozishni boshlash 🎙️
+            </button>
+            <p style="margin-top: 15px; font-weight: bold; text-align: left">
+              Sizning aytganlaringiz (Transcript):
+            </p>
+            <div id="transcript-3" class="transcript-box">
+              Hozircha yozuv yo'q...
+            </div>
+          </div>
+        </div>
+
+        <button
+          onclick="submitSpeaking()"
+          style="
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+          "
+        >
+          Speaking Javoblarini AI ga Baholatish 🚀
+        </button>
+
+        <div id="ai-feedback-result"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="nav-row">
+      <button id="prevBtn" class="nav-btn" onclick="changePart(-1)" disabled>
+        ‹ Oldingi
+      </button>
+      <span id="partIndicator" style="font-weight: bold">Part 1 / 3</span>
+      <button id="nextBtn" class="nav-btn" onclick="changePart(1)">
+        Keyingi ›
+      </button>
+    </div>
+
+    <script>
+      let currentPartIndex = 1;
+      const totalParts = 3;
+      let recognition = null;
+      let activeTimer = null;
+
+      // Part 1 savollari
+      const p1Questions = [
+        "1. Where do you study?",
+        "2. Are you working or are you a student?",
+        "3. What do you dislike about your major?",
+        "4. Do you think AI is helpful for learning?",
+      ];
+      let p1Index = 0;
+      let p1Recording = false;
+
+      // Part 3 savollari
+      const p3Questions = [
+        "1. Where do people in your country often go for holidays?",
+        "2. What kinds of places do people like to visit on holiday?",
+        "3. Why are some destinations more popular than others?",
+      ];
+      let p3Index = 0;
+      let p3Recording = false;
+
+      let fullTranscript1 = "";
+      let fullTranscript3 = "";
+
+      function initSpeechRecognition(onResultCallback, onEndCallback) {
+        if (
+          !("webkitSpeechRecognition" in window) &&
+          !("SpeechRecognition" in window)
+        ) {
+          alert("Brauzeringiz ovozni matnga o'girishni qo'llab-quvvatlamaydi.");
+          return null;
+        }
+        const SpeechRecognition =
+          window.SpeechRecognition || window.webkitSpeechRecognition;
+        const rec = new SpeechRecognition();
+        rec.lang = "en-US";
+        rec.continuous = true;
+        rec.interimResults = true;
+
+        let currentSessionText = "";
+
+        rec.onresult = (event) => {
+          let interim = "";
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              currentSessionText += event.results[i][0].transcript + " ";
+            } else {
+              interim += event.results[i][0].transcript;
+            }
+          }
+          if (onResultCallback) onResultCallback(currentSessionText + interim);
+        };
+
+        rec.onend = () => {
+          if (onEndCallback) onEndCallback(currentSessionText);
+        };
+
+        return rec;
+      }
+
+      // --- PART 1 LOGIC (Savolma-savol va qo'lda to'xtatish) ---
+      function togglePart1Question() {
+        const btn = document.getElementById("p1-btn");
+        const timerText = document.getElementById("p1-timer");
+        const box = document.getElementById("transcript-1");
+
+        if (!p1Recording) {
+          // Boshlash
+          p1Recording = true;
+          btn.textContent = "To'xtatish ⏹️ (Tugatish)";
+          btn.style.backgroundColor = "#ef4444";
+
+          let timeLeft = 30;
+          timerText.textContent = `Qolgan vaqt: ${timeLeft} soniya`;
+
+          recognition = initSpeechRecognition(
+            (text) => {
+              box.textContent = fullTranscript1 + text;
+            },
+            (finalTxt) => {},
+          );
+          if (recognition) recognition.start();
+
+          activeTimer = setInterval(() => {
+            timeLeft--;
+            timerText.textContent = `Qolgan vaqt: ${timeLeft} soniya`;
+            if (timeLeft <= 0) {
+              stopPart1Question();
+            }
+          }, 1000);
+        } else {
+          // Qo'lda to'xtatish
+          stopPart1Question();
+        }
+      }
+
+      function stopPart1Question() {
+        clearInterval(activeTimer);
+        if (recognition) {
+          try {
+            recognition.stop();
+          } catch (e) {}
+        }
+        p1Recording = false;
+
+        const box = document.getElementById("transcript-1");
+        fullTranscript1 += box.textContent + " ";
+
+        p1Index++;
+        if (p1Index < p1Questions.length) {
+          document.getElementById("p1-q-box").textContent =
+            p1Questions[p1Index];
+          document.getElementById("p1-btn").textContent =
+            "Keyingi savolga o'tish / Boshlash 🎙️";
+          document.getElementById("p1-btn").style.backgroundColor =
+            "var(--primary-color)";
+          document.getElementById("p1-timer").textContent = "30 soniya";
+        } else {
+          document.getElementById("p1-q-box").textContent =
+            "Part 1 tugadi! Keyingi qismga o'ting.";
+          document.getElementById("p1-btn").style.display = "none";
+          document.getElementById("p1-timer").textContent =
+            "Barcha savollar bajarildi ✅";
+        }
+      }
+
+      // --- PART 2 LOGIC ---
+      function startPart2Timer() {
+        const btn = document.getElementById("btn-2");
+        const timerText = document.getElementById("timer-2");
+        const box = document.getElementById("transcript-2");
+        btn.disabled = true;
+        btn.style.backgroundColor = "#f59e0b";
+
+        let prepTime = 60;
+        timerText.textContent = `Tayyorgarlik vaqti: ${prepTime} soniya`;
+
+        const prepInterval = setInterval(() => {
+          prepTime--;
+          timerText.textContent = `Tayyorgarlik vaqti: ${prepTime} soniya`;
+          if (prepTime <= 0) {
+            clearInterval(prepInterval);
+            timerText.textContent = "Gapirish boshlandi! 🔴 (2 daqiqa)";
+            btn.style.backgroundColor = "#ef4444";
+            btn.textContent = "To'xtatish ⏹️";
+            btn.disabled = false;
+
+            let isSpeaking = true;
+            recognition = initSpeechRecognition((text) => {
+              box.textContent = text;
+            });
+            if (recognition) recognition.start();
+
+            let speakTime = 120;
+            const speakInterval = setInterval(() => {
+              speakTime--;
+              timerText.textContent = `Gapirish vaqti: ${speakTime} soniya`;
+              if (speakTime <= 0 || !isSpeaking) {
+                clearInterval(speakInterval);
+                if (recognition) recognition.stop();
+                btn.textContent = "Tugatildi ✅";
+                btn.style.backgroundColor = "#059669";
+                timerText.textContent = "Vaqt tugadi!";
+              }
+            }, 1000);
+
+            btn.onclick = () => {
+              isSpeaking = false;
+              clearInterval(speakInterval);
+              if (recognition) recognition.stop();
+              btn.textContent = "Tugatildi ✅";
+              btn.style.backgroundColor = "#059669";
+              timerText.textContent = "Erta to'xtatildi.";
+            };
+          }
+        }, 1000);
+      }
+
+      // --- PART 3 LOGIC (Savolma-savol) ---
+      function togglePart3Question() {
+        const btn = document.getElementById("p3-btn");
+        const timerText = document.getElementById("p3-timer");
+        const box = document.getElementById("transcript-3");
+
+        if (!p3Recording) {
+          p3Recording = true;
+          btn.textContent = "To'xtatish ⏹️ (Tugatish)";
+          btn.style.backgroundColor = "#ef4444";
+
+          let timeLeft = 60;
+          timerText.textContent = `Qolgan vaqt: ${timeLeft} soniya`;
+
+          recognition = initSpeechRecognition((text) => {
+            box.textContent = fullTranscript3 + text;
+          });
+          if (recognition) recognition.start();
+
+          activeTimer = setInterval(() => {
+            timeLeft--;
+            timerText.textContent = `Qolgan vaqt: ${timeLeft} soniya`;
+            if (timeLeft <= 0) {
+              stopPart3Question();
+            }
+          }, 1000);
+        } else {
+          stopPart3Question();
+        }
+      }
+
+      function stopPart3Question() {
+        clearInterval(activeTimer);
+        if (recognition) {
+          try {
+            recognition.stop();
+          } catch (e) {}
+        }
+        p3Recording = false;
+
+        const box = document.getElementById("transcript-3");
+        fullTranscript3 += box.textContent + " ";
+
+        p3Index++;
+        if (p3Index < p3Questions.length) {
+          document.getElementById("p3-q-box").textContent =
+            p3Questions[p3Index];
+          document.getElementById("p3-btn").textContent =
+            "Keyingi savolga o'tish / Boshlash 🎙️";
+          document.getElementById("p3-btn").style.backgroundColor =
+            "var(--primary-color)";
+          document.getElementById("p3-timer").textContent = "60 soniya";
+        } else {
+          document.getElementById("p3-q-box").textContent =
+            "Part 3 tugadi! Endi AI ga baholatishingiz mumkin.";
+          document.getElementById("p3-btn").style.display = "none";
+          document.getElementById("p3-timer").textContent =
+            "Barcha savollar bajarildi ✅";
+        }
+      }
+
+      function changePart(direction) {
+        if (recognition) {
+          try {
+            recognition.stop();
+          } catch (e) {}
+        }
+        clearInterval(activeTimer);
+        currentPartIndex += direction;
+        if (currentPartIndex < 1) currentPartIndex = 1;
+        if (currentPartIndex > totalParts) currentPartIndex = totalParts;
+
+        document
+          .querySelectorAll(".speaking-part")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .getElementById("part-" + currentPartIndex)
+          .classList.add("active");
+
+        document.getElementById("partIndicator").textContent =
+          "Part " + currentPartIndex + " / " + totalParts;
+        document.getElementById("prevBtn").disabled = currentPartIndex === 1;
+        document.getElementById("nextBtn").disabled =
+          currentPartIndex === totalParts;
+      }
+
+      async function submitSpeaking() {
+        const part1 = fullTranscript1.trim();
+        const part2 = document
+          .getElementById("transcript-2")
+          .textContent.trim();
+        const part3 = fullTranscript3.trim();
+        const resultBox = document.getElementById("ai-feedback-result");
+
+        const cleanPart2 = part2.includes("Hozircha") ? "" : part2;
+
+        if (!part1 && !cleanPart2 && !part3) {
+          alert("Iltimos, avval ovoz yozish tugmasini bosib gapiring!");
+          return;
+        }
+
+        resultBox.style.display = "block";
+        resultBox.textContent =
+          "AI examiner Speaking javoblaringizni tahlil qilmoqda...";
+
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:5000/api/ai-evaluate-speaking",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                part1,
+                part2: cleanPart2,
+                part3,
+                transcript: `${part1} ${cleanPart2} ${part3}`,
+              }),
+            },
+          );
+
+          const data = await response.json();
+          if (data.success) {
+            resultBox.textContent = data.feedback;
+            resultBox.scrollIntoView({ behavior: "smooth" });
+          } else {
+            resultBox.textContent = "Xatolik: " + data.error;
+          }
+        } catch (err) {
+          resultBox.textContent = "Server bilan aloqada xatolik yuz berdi.";
+        }
+      }
+    </script>
+  </body>
+</html>

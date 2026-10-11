@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Full IELTS Mock Test - SBS IELTS Examiner</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #333333;
+        --border-color: #e0e0e0;
+        --primary-color: #059669;
+        --secondary-bg: #f8f9fa;
+        --telegram-color: #2481cc;
+        --font-size: 16px;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        font-size: var(--font-size);
+        padding-bottom: 90px;
+      }
+      .header {
+        background-color: var(--bg-color);
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 60px;
+      }
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .ielts-text-logo {
+        font-size: 28px;
+        font-weight: 900;
+        color: #008000;
+        letter-spacing: -1px;
+      }
+      .telegram-link {
+        color: var(--telegram-color);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .main-container {
+        margin-top: 100px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+      }
+      .mock-card {
+        background: var(--secondary-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+      .mock-card h1 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        font-size: 24px;
+      }
+      .mock-card p {
+        margin-bottom: 25px;
+        color: #555;
+        font-size: 16px;
+      }
+
+      .skill-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+        text-align: left;
+      }
+      .skill-item {
+        background: #fff;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn-start {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-start:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <div class="ielts-text-logo">IELTS</div>
+        <a href="https://t.me/SBS_stars" target="_blank" class="telegram-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-.38.24-1.07.7-.96.66-1.89 1.28-1.89 1.28s-.17.11-.49.03c-.32-.08-.72-.26-1.16-.47-.54-.26-1.17-.53-1.17-.53s-.87-.55.62-1.14c.32-.13 1.96-.84 2.99-1.2 1.05-.37 2.86-1.01 2.86-1.01s1.02-.4 1.02 0z"
+            />
+          </svg>
+          <span>@SBS_stars</span>
+        </a>
+      </div>
+      <div>
+        <a
+          href="../dashboard.html"
+          style="
+            background-color: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+          "
+          >Chiqish</a
+        >
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+      <div class="mock-card">
+        <h1>🚀 Full IELTS Mock Test</h1>
+        <p>
+          Haqiqiy kompyuterda topshiriladigan IELTS (CDI) imtihoni muhiti. Ushbu
+          mock test quyidagi 4 ta asosiy qismni o'z ichiga oladi va sun'iy
+          intellekt (AI) orqali savollar bazasidan avtomatik yangilanib turadi:
+        </p>
+
+        <div class="skill-list">
+          <div class="skill-item">🎧 1. Listening Test (30 daqiqa)</div>
+          <div class="skill-item">📖 2. Reading Test (60 daqiqa)</div>
+          <div class="skill-item">✍️ 3. Writing Test (60 daqiqa)</div>
+          <div class="skill-item">🗣️ 4. Speaking Test (11-14 daqiqa)</div>
+        </div>
+
+        <button class="btn-start" onclick="startFullMock()">
+          Mock Testni Boshlash 🚀
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function startFullMock() {
+        // AI bazasidan random yoki navbatdagi testni tanlab Listening sahifasiga yo'naltirish
+        alert("Full Mock Test boshlandi! Dastlab Listening moduli ochiladi.");
+        window.location.href = "listening.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,542 @@
+/* Asosiy sozlamalar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f9fafb;
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+/* Oq va yashil ranglar palitrasi */
+:root {
+  --primary-green: #059669;
+  --primary-dark-green: #047857;
+  --light-green: #ecfdf5;
+  --white: #ffffff;
+  --gray-text: #4b5563;
+}
+
+/* HEADER / NAVIGATION */
+.header {
+  background-color: var(--white);
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-box img {
+  height: 35px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 2px solid var(--primary-green);
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--primary-dark-green);
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+  font-weight: 500;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: var(--gray-text);
+  transition: color 0.3s;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+  color: var(--primary-green);
+}
+
+.btn-login {
+  background-color: var(--primary-green);
+  color: var(--white);
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.btn-login:hover {
+  background-color: var(--primary-dark-green);
+}
+
+/* HERO SECTION */
+.hero-section {
+  background: linear-gradient(to bottom, var(--light-green), var(--white));
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.badge {
+  background-color: #d1fae5;
+  color: #065f46;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.hero-section h1 {
+  font-size: 2.5rem;
+  color: #111827;
+  margin-bottom: 1rem;
+  font-weight: 800;
+}
+
+.hero-section p {
+  color: var(--gray-text);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+}
+
+/* FULL MOCK BANNER */
+.full-mock-banner {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.1);
+  border: 2px solid var(--primary-green);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.banner-info h2 {
+  font-size: 1.5rem;
+  color: #111827;
+  margin: 0.25rem 0;
+}
+
+.banner-info p {
+  color: var(--gray-text);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.sub-badge {
+  background-color: #d1fae5;
+  color: #047857;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.btn-start-full {
+  background-color: var(--primary-green);
+  color: var(--white);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition:
+    background 0.3s,
+    transform 0.2s;
+  white-space: nowrap;
+}
+
+.btn-start-full:hover {
+  background-color: var(--primary-dark-green);
+  transform: translateY(-2px);
+}
+
+/* SKILLS SECTION */
+.skills-container {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+}
+
+.skills-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  color: #111827;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.skill-card {
+  display: flex; /* Ichidagi elementlarni ustma-ust qo'yish uchun */
+  flex-direction: column; /* Ustun ko'rinishida */
+  justify-content: space-between; /* Elementlar orasini teng taqsimlash */
+  height: 100%; /* Kartalar bir xil balandlikda bo'lishi uchun */
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary-green);
+  box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.1);
+}
+
+.skill-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.skill-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.skill-card p {
+  color: var(--gray-text);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.skill-link {
+  display: block;
+  text-align: center;
+  background-color: var(--light-green);
+  color: var(--primary-dark-green);
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+.skill-link:hover {
+  background-color: var(--primary-green);
+  color: var(--white);
+}
+
+/* FOOTER */
+.footer {
+  background-color: #111827;
+  color: var(--white);
+  padding: 4rem 1rem 1.5rem 1rem;
+  margin-top: 5rem;
+}
+
+.footer-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2.5rem;
+}
+
+.footer-col h3 {
+  color: #34d399;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.footer-col p,
+.footer-col ul,
+.footer-col a {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col a:hover {
+  color: #34d399;
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  text-align: center;
+  border-top: 1px solid #1f2937;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* Login Sahifasi uchun qo'shimcha uslublar */
+.auth-body {
+  background: linear-gradient(to bottom, #ecfdf5, #f9fafb);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 1rem;
+}
+
+.auth-card {
+  background: var(--white);
+  padding: 2.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-logo img {
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 2px solid var(--primary-green);
+  margin-bottom: 0.5rem;
+}
+
+.auth-logo h2 {
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+.auth-logo p {
+  color: var(--gray-text);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--gray-text);
+}
+
+.auth-footer a {
+  color: var(--primary-green);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Dashboard Sahifasi Uslublari */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.welcome-banner {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.welcome-banner h1 {
+  font-size: 1.8rem;
+  color: #111827;
+}
+
+.welcome-banner p {
+  color: var(--gray-text);
+  margin-top: 0.25rem;
+}
+
+.overall-score-box {
+  background: var(--light-green);
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  border: 1px solid var(--primary-green);
+}
+
+.overall-score-box span {
+  font-size: 0.8rem;
+  color: var(--primary-dark-green);
+  font-weight: 600;
+  display: block;
+}
+
+.overall-score-box h2 {
+  font-size: 1.8rem;
+  color: var(--primary-green);
+}
+
+/* Tabs */
+.stats-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  padding: 0.5rem 1.25rem;
+  border: 1px solid #d1d5db;
+  background: var(--white);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--gray-text);
+  transition: all 0.3s;
+}
+
+.tab-btn.active {
+  background: var(--primary-green);
+  color: var(--white);
+  border-color: var(--primary-green);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+}
+
+.stat-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-score {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--primary-green);
+  margin-bottom: 0.25rem;
+}
+
+.stat-info {
+  font-size: 0.85rem;
+  color: var(--gray-text);
+}
+
+/* History & Feedback */
+.history-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.history-card {
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e7eb;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.history-header .date {
+  color: var(--gray-text);
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+.feedback-box {
+  background: var(--light-green);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-left: 4px solid var(--primary-green);
+}

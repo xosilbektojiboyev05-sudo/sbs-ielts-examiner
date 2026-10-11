@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard & Statistika - SBS IELTS Examiner</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- HEADER / NAVIGATION -->
+    <header class="header">
+      <div class="nav-container">
+        <div class="logo-box">
+          <img src="assets/images/logophoto.png" alt="SBS IELTS Logo" />
+          <span class="logo-text">SBS IELTS Examiner</span>
+        </div>
+        <nav class="nav-menu">
+          <a href="index.html">Bosh sahifa</a>
+          <a href="index.html#mocks">Mock Testlar</a>
+          <a href="dashboard.html" class="active">Statistika</a>
+          <a href="index.html#about">SBS Academy</a>
+        </nav>
+        <div>
+          <a
+            href="login.html"
+            class="btn-login"
+            style="background-color: #ef4444"
+            >Chiqish</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- DASHBOARD CONTAINER -->
+    <main class="dashboard-container">
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div>
+          <h1>
+            Xush kelibsiz, <span id="user-email-display">Talaba</span>! 👋
+          </h1>
+          <p>
+            Bugungi IELTS tayyorgarlik darajangiz va statistikalaringiz bilan
+            tanishing.
+          </p>
+        </div>
+        <div class="overall-score-box">
+          <span>O'rtacha Band Score</span>
+          <h2>7.0</h2>
+        </div>
+      </div>
+
+      <!-- STATS TABS (Kunlik, Haftalik, Oylik) -->
+      <div class="stats-tabs">
+        <button class="tab-btn active" onclick="switchTab('daily')">
+          Kunlik
+        </button>
+        <button class="tab-btn" onclick="switchTab('weekly')">Haftalik</button>
+        <button class="tab-btn" onclick="switchTab('monthly')">Oylik</button>
+      </div>
+
+      <!-- STATS GRID CARDS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>📖 Reading</h3>
+          <p class="stat-score">Band 7.5</p>
+          <span class="stat-info">To'g'ri javoblar: 32/40</span>
+        </div>
+        <div class="stat-card">
+          <h3>🎧 Listening</h3>
+          <p class="stat-score">Band 7.0</p>
+          <span class="stat-info">To'g'ri javoblar: 30/40</span>
+        </div>
+        <div class="stat-card">
+          <h3>✍️ Writing</h3>
+          <p class="stat-score">Band 6.5</p>
+          <span class="stat-info">AI Feedback tayyor</span>
+        </div>
+        <div class="stat-card">
+          <h3>🎤 Speaking</h3>
+          <p class="stat-score">Band 7.0</p>
+          <span class="stat-info">Ovozli tahlil qilingan</span>
+        </div>
+      </div>
+
+      <!-- RECENT EXAMS & FEEDBACK SECTION -->
+      <div class="history-section">
+        <h2>So'nggi Imtihonlar va AI Feedback (Ikki tilda)</h2>
+
+        <div class="history-card">
+          <div class="history-header">
+            <span>Full Mock Test #3</span>
+            <span class="date">11 Oktabr, 2026</span>
+          </div>
+          <div class="feedback-box">
+            <p>
+              <strong>🇬🇧 English Feedback:</strong> Your writing task 2
+              structure is good, but pay attention to complex grammatical
+              structures and avoid repetition of vocabulary.
+            </p>
+            <p>
+              <strong>🇺🇿 O'zbekcha Feedback:</strong> Writing Task 2 tuzilishi
+              yaxshi, lekin murakkab grammatik tuzilmalarga e'tibor qarating va
+              bir xil so'zlarni takrorlamaslikka harakat qiling.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-bottom" style="margin-top: 0; border: none">
+        &copy; 2026 SBS IELTS Examiner. Barcha huquqlar himoyalangan.
+      </div>
+    </footer>
+
+    <script>
+      function switchTab(type) {
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+        // Bu yerda kunlik, haftalik yoki oylik ma'lumotlarni almashtirish logikasi yoziladi
+      }
+    </script>
+  </body>
+</html>
