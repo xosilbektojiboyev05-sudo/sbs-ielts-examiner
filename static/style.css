@@ -201,10 +201,10 @@ body {
 }
 
 .skill-card {
-  display: flex; /* Ichidagi elementlarni ustma-ust qo'yish uchun */
-  flex-direction: column; /* Ustun ko'rinishida */
-  justify-content: space-between; /* Elementlar orasini teng taqsimlash */
-  height: 100%; /* Kartalar bir xil balandlikda bo'lishi uchun */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
   padding: 20px;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
