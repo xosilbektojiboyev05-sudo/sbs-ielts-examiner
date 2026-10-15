@@ -30,6 +30,31 @@ client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 tests_db = []
 
 
+@app.route('/sitemap.xml')
+def sitemap():
+    pages = [
+        "https://sbs-ielts-examiner-2tsu.onrender.com/",
+        "https://sbs-ielts-examiner-2tsu.onrender.com/index.html",
+        "https://sbs-ielts-examiner-2tsu.onrender.com/skills/reading.html",
+        "https://sbs-ielts-examiner-2tsu.onrender.com/skills/listening.html",
+        "https://sbs-ielts-examiner-2tsu.onrender.com/skills/writing.html",
+        "https://sbs-ielts-examiner-2tsu.onrender.com/skills/speaking.html",
+        "https://sbs-ielts-examiner-2tsu.onrender.com/skills/full-mock.html",
+        "https://sbs-ielts-examiner-2tsu.onrender.com/dashboard.html",
+        "https://sbs-ielts-examiner-2tsu.onrender.com/login.html"
+    ]
+
+    xml = '<?xml version="1.0" encoding="UTF-8"?>'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+
+    for page in pages:
+        xml += f'<url><loc>{page}</loc></url>'
+
+    xml += '</urlset>'
+
+    return app.response_class(xml, mimetype='application/xml')
+
+
 def init_db():
     with get_db_connection() as conn:
         with conn.cursor() as cur:
