@@ -1,8 +1,23 @@
 import os
-from flask import Flask, request, jsonify, render_template
+from dotenv import load_dotenv
+
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from groq import Groq
+import psycopg
+
+load_dotenv()
+
+
+def get_db_connection():
+    database_url = os.environ.get("DATABASE_URL")
+
+    if not database_url:
+        raise RuntimeError("DATABASE_URL sozlanmagan.")
+
+    return psycopg.connect(database_url, sslmode="require")
+
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'assets/images'
@@ -15,64 +30,161 @@ client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 tests_db = []
 
 
+def init_db():
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS tests (
+                    id SERIAL PRIMARY KEY,
+                    skill VARCHAR(50) NOT NULL,
+                    title TEXT NOT NULL,
+                    content TEXT,
+                    image_path TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+        conn.commit()
+
+
 # --- BOSHI SAHIFA ROUTI ---
+
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('skills/index.html')
 from flask import send_from_directory
+
+@app.route('/index.html')
+def index_page():
+    return render_template('skills/index.html')
 
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'assets/images'),
                                'logophoto.png', mimetype='image/png')
 
+# Assets papkasidagi rasmlarni ochish
+@app.route('/assets/<path:filename>')
+def assets(filename):
+    return send_from_directory(
+        os.path.join(app.root_path, 'assets'),
+        filename
+    )
 
 # --- ADMIN PANEL UCHUN YO'LLAR ---
+
+
 
 @app.route('/api/add-test', methods=['POST'])
 def add_test():
     try:
-        skill = request.form.get('skill', '')
-        title = request.form.get('title', '')
-        content = request.form.get('content', '')
-        
+        skill = request.form.get('skill', '').strip()
+        title = request.form.get('title', '').strip()
+        content = request.form.get('content', '').strip()
+
+        if not skill or not title:
+            return jsonify({
+                "status": "error",
+                "error": "Skill va test nomi kiritilishi shart."
+            }), 400
+
         image_url = ""
+
         if 'file' in request.files:
             file = request.files['file']
-            if file and file.filename != '':
+
+            if file and file.filename:
                 filename = secure_filename(file.filename)
                 filepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(filepath)
-                image_url = f"../assets/images/{filename}"
+                image_url = f"/assets/images/{filename}"
 
-        new_test = {
-            "id": len(tests_db) + 1,
-            "skill": skill,
-            "title": title,
-            "content": content,
-            "image": image_url
-        }
-        tests_db.append(new_test)
-        
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO tests (skill, title, content, image_path)
+                    VALUES (%s, %s, %s, %s)
+                    RETURNING id
+                """, (skill, title, content, image_url))
+
+                test_id = cur.fetchone()[0]
+
         return jsonify({
-            "status": "success", 
-            "message": "Test va rasm muvaffaqiyatli saqlandi! 🚀"
+            "status": "success",
+            "message": "Test ma'lumotlar bazasiga saqlandi!",
+            "id": test_id
         })
+
     except Exception as e:
-        return jsonify({"status": "error", "error": str(e)})
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
+
+
 
 
 @app.route('/api/get-tests', methods=['GET'])
 def get_tests():
-    return jsonify(tests_db)
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    SELECT id, skill, title, content, image_path
+                    FROM tests
+                    ORDER BY id ASC
+                """)
+                rows = cur.fetchall()
+
+        tests = [
+            {
+                "id": row[0],
+                "skill": row[1],
+                "title": row[2],
+                "content": row[3] or "",
+                "image": row[4] or ""
+            }
+            for row in rows
+        ]
+
+        return jsonify(tests)
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
+
+
 
 
 @app.route('/api/delete-test/<int:test_id>', methods=['DELETE'])
 def delete_test(test_id):
-    global tests_db
-    tests_db = [t for t in tests_db if t["id"] != test_id]
-    return jsonify({"status": "success", "message": "Test o'chirildi!"})
+    try:
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "DELETE FROM tests WHERE id = %s RETURNING id",
+                    (test_id,)
+                )
+                deleted_test = cur.fetchone()
+
+        if deleted_test is None:
+            return jsonify({
+                "status": "error",
+                "message": "Bunday test topilmadi."
+            }), 404
+
+        return jsonify({
+            "status": "success",
+            "message": "Test muvaffaqiyatli o'chirildi!"
+        })
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
 
 
 # --- AI BAHOLASH UCHUN YO'L ---
@@ -389,6 +501,44 @@ Keyingi bandga chiqish uchun uchta aniq tavsiya.
             "error": str(e)
         }), 500
 
+from flask import abort
+
+@app.route('/<page>.html')
+def root_pages(page):
+    allowed_pages = {'dashboard', 'login', 'admin'}
+
+    if page not in allowed_pages:
+        abort(404)
+
+    return render_template(f'skills/{page}.html')
+
+
+@app.route('/skills/<page>.html')
+def skill_pages(page):
+    allowed_pages = {
+        'index',
+        'full-mock',
+        'reading',
+        'listening',
+        'writing',
+        'speaking',
+        'dashboard',
+        'login',
+        'admin'
+    }
+
+    if page not in allowed_pages:
+        abort(404)
+
+    return render_template(f'skills/{page}.html')
+
+
 
 if __name__ == '__main__':
+    try:
+        init_db()
+        print("PostgreSQL ulanishi va tests jadvali tayyor!")
+    except Exception as e:
+        print("Database xatosi:", e)
+
     app.run(debug=True, port=5000)

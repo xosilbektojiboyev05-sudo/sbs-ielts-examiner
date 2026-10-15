@@ -27,10 +27,10 @@
 
         <!-- Menyu Linklari -->
         <nav class="nav-menu">
-          <a href="index.html" class="active">Bosh sahifa</a>
-          <a href="#mocks">Mock Testlar</a>
-          <a href="dashboard.html">Statistika</a>
-          <a href="#about">SBS Academy</a>
+          <a href="{{ url_for('home') }}" class="active">Bosh sahifa</a>
+          <a href="{{ url_for('home') }}#mocks">Mock Testlar</a>
+          <a href="{{ url_for('root_pages', page='dashboard') }}">Statistika</a>
+          <a href="{{ url_for('home') }}#about">SBS Academy</a>
         </nav>
 
         <!-- Kirish / Ro'yxatdan o'tish -->

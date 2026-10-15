@@ -1,5 +1,7 @@
+
 Flask
 groq
 python-dotenv
 gunicorn
 flask-cors
+psycopg[binary]==3.3.6
