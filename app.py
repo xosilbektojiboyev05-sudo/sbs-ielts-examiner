@@ -32,6 +32,11 @@ tests_db = []
 
 @app.route('/sitemap.xml')
 def sitemap():
+    from xml.etree.ElementTree import Element, SubElement, tostring
+
+    namespace = "http://www.sitemaps.org/schemas/sitemap/0.9"
+    urlset = Element("urlset", xmlns=namespace)
+
     pages = [
         "https://sbs-ielts-examiner-2tsu.onrender.com/",
         "https://sbs-ielts-examiner-2tsu.onrender.com/index.html",
@@ -44,15 +49,13 @@ def sitemap():
         "https://sbs-ielts-examiner-2tsu.onrender.com/login.html"
     ]
 
-    xml = '<?xml version="1.0" encoding="UTF-8"?>'
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-
     for page in pages:
-        xml += f'<url><loc>{page}</loc></url>'
+        url_element = SubElement(urlset, "url")
+        SubElement(url_element, "loc").text = page
 
-    xml += '</urlset>'
+    xml = tostring(urlset, encoding="utf-8", xml_declaration=True)
 
-    return app.response_class(xml, mimetype='application/xml')
+    return app.response_class(xml, mimetype="application/xml")
 
 
 def init_db():
