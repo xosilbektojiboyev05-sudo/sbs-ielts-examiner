@@ -1,11 +1,15 @@
-import os
-from dotenv import load_dotenv
 
+import os
+import base64
+import mimetypes
+
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from groq import Groq
 import psycopg
+
 
 load_dotenv()
 
@@ -220,10 +224,31 @@ def delete_test(test_id):
 @app.route('/api/ai-evaluate', methods=['POST'])
 def ai_evaluate():
     try:
-        data = request.get_json(silent=True) or {}
+        data = request.form
 
         task1_text = str(data.get('task1') or '').strip()
         task2_text = str(data.get('task2') or '').strip()
+        task1_question = str(data.get('task1_question') or '').strip()
+        task2_question = str(data.get('task2_question') or '').strip()
+
+        task1_image = request.files.get('task1_image')
+
+        if task1_image and task1_image.filename:
+            if not task1_image.mimetype or not task1_image.mimetype.startswith('image/'):
+                return jsonify({
+                    "success": False,
+                    "error": "Task 1 uchun yaroqli rasm faylini tanlang."
+                }), 400
+
+            if task1_image.seek(0, 2) > 10 * 1024 * 1024:
+                return jsonify({
+                    "success": False,
+                    "error": "Rasm hajmi 10 MB dan oshmasligi kerak."
+                }), 400
+
+            task1_image.seek(0)
+        else:
+            task1_image = None
 
         if not task1_text and not task2_text:
             return jsonify({
@@ -242,31 +267,29 @@ Evaluate the following IELTS Academic Writing responses using
 the official IELTS Writing assessment criteria.
 
 IMPORTANT RULES:
-- Evaluate only the essay or essays that are provided.
-- Do not invent information about a chart, graph, map or question.
-- For Task 1, assess Task Achievement.
-- For Task 2, assess Task Response.
-- Assess Coherence and Cohesion, Lexical Resource, and
-  Grammatical Range and Accuracy separately.
-- Give a score from 0 to 9 in half-band increments for each
-  criterion: for example, 5.0, 5.5, 6.0, 6.5, 7.0.
-- Base every score on evidence in the student's actual writing.
-- Do not give a high score simply because the essay is long
-  or contains advanced vocabulary.
-- Identify inaccurate data, missing overview, weak comparisons,
-  unsupported arguments, repetition, grammar errors and
-  unnatural word choices when applicable.
-- Do not invent mistakes that are not present.
-- Explain feedback in Uzbek, but preserve English examples.
-- Be honest and consistent. Do not inflate scores.
-- Distinguish between an estimated AI score and an official
-  IELTS result.
+
+- Read each task question carefully before evaluating the essay.
+- Evaluate each essay against its own supplied question.
+- Do not claim that chart figures are incorrect unless the actual chart data is available.
+- If chart data is unavailable, state that numerical accuracy cannot be fully verified.
+- Never invent mistakes or criticisms that are not supported by the submitted essay.
+- Support important criticisms with exact examples from the essay.
+- Keep the estimated overall band consistent with the criterion scores.
+
+
+
+TASK 1 QUESTION:
+{task1_question if task1_question else "NOT PROVIDED"}
 
 TASK 1 ESSAY:
 {task1_text if task1_text else "NOT PROVIDED"}
 
+TASK 2 QUESTION:
+{task2_question if task2_question else "NOT PROVIDED"}
+
 TASK 2 ESSAY:
 {task2_text if task2_text else "NOT PROVIDED"}
+
 
 Use this exact report structure in Markdown:
 
@@ -326,6 +349,46 @@ Task 1 and Task 2 have different Task Achievement/Task Response
 criteria. Be specific, evidence-based and fair.
 """
 
+       
+        if task1_image:
+            image_bytes = task1_image.read()
+            base64_image = base64.b64encode(image_bytes).decode("utf-8")
+
+            image_mime = (
+                task1_image.mimetype
+                or mimetypes.guess_type(task1_image.filename)[0]
+                or "image/jpeg"
+            )
+
+            user_content = [
+                {
+                    "type": "text",
+                    "text": (
+                        full_prompt
+                        + "\n\nAnalyze the attached Task 1 chart carefully. "
+                        "Compare the essay's numerical claims with the "
+                        "visible chart data. Only identify discrepancies "
+                        "that can actually be verified from the image. "
+                        "If any label or value is unreadable, state this "
+                        "clearly instead of guessing."
+                    )
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": (
+                            f"data:{image_mime};base64,{base64_image}"
+                        )
+                    }
+                }
+            ]
+
+            model_name = "qwen/qwen3.8-27b"
+
+        else:
+            user_content = full_prompt
+            model_name = "openai/gpt-oss-20b"
+
         chat_completion = client.chat.completions.create(
             messages=[
                 {
@@ -341,10 +404,10 @@ criteria. Be specific, evidence-based and fair.
                 },
                 {
                     "role": "user",
-                    "content": full_prompt
+                    "content": user_content
                 }
             ],
-            model="openai/gpt-oss-20b",
+            model=model_name,
             temperature=0.2,
             max_tokens=3500
         )

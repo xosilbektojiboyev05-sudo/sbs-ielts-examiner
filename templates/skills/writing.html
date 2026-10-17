@@ -133,7 +133,7 @@
       }
     </style>
   </head>
-  <body onload="loadWritingTest()">
+  <body>
     <!-- HEADER -->
     <div class="header">
       <div class="header-left">
@@ -171,40 +171,69 @@
           Writing Materiallari
         </h2>
 
-        <!-- Task 1 Savol va Rasm -->
+        <!-- TASK 1: Foydalanuvchi savoli va rasm -->
         <div class="task-box">
           <div class="task-title">Writing Task 1</div>
+
           <p style="margin-bottom: 10px; font-size: 14px; color: #555">
-            You should spend about 20 minutes on this task. Summarise the
-            information by selecting and reporting the main features.
+            You should spend about 20 minutes on this task.
           </p>
+
+          <label
+            for="task1-question"
+            style="display: block; font-weight: bold; margin-bottom: 8px"
+          >
+            Task 1 savolini kiriting
+          </label>
+
+          <textarea
+            id="task1-question"
+            rows="4"
+            placeholder="Masalan: The chart below shows..."
+          ></textarea>
+
+          <label
+            for="task1-image-upload"
+            style="display: block; font-weight: bold; margin: 12px 0 8px"
+          >
+            Grafik yoki diagramma rasmini yuklang
+          </label>
+
+          <input type="file" id="task1-image-upload" accept="image/*" />
+
           <div
             id="task1-image-box"
             style="
+              margin-top: 12px;
               background: #eee;
-              min-height: 200px;
+              min-height: 100px;
               display: flex;
               align-items: center;
               justify-content: center;
               border-radius: 6px;
-              color: #777;
-              font-weight: bold;
               overflow: hidden;
             "
           >
-            [Task 1 Grafik / Rasm Joyi]
+            Rasm hali tanlanmagan
           </div>
         </div>
 
-        <!-- Task 2 Savol Matni -->
+        <!-- TASK 2: Foydalanuvchi savoli -->
         <div class="task-box">
           <div class="task-title">Writing Task 2</div>
-          <p
-            id="task2-content"
-            style="font-size: 14px; color: #555; line-height: 1.6"
+
+          <label
+            for="task2-question"
+            style="display: block; font-weight: bold; margin-bottom: 8px"
           >
-            Admin tomonidan kiritilgan savol bu yerda ko'rsatiladi...
-          </p>
+            Task 2 savolini kiriting
+          </label>
+
+          <textarea
+            id="task2-question"
+            rows="4"
+            placeholder="Masalan: Some people believe that..."
+          ></textarea>
         </div>
       </div>
 
@@ -275,33 +304,6 @@
     </div>
 
     <script>
-      async function loadWritingTest() {
-        try {
-          const response = await fetch("http://127.0.0.1:5000/api/get-tests");
-          const tests = await response.json();
-
-          const writingTests = tests.filter((t) => t.skill === "writing");
-          if (writingTests.length > 0) {
-            const latestTest = writingTests[writingTests.length - 1];
-
-            document.getElementById("test-heading").textContent =
-              latestTest.title;
-            if (latestTest.content) {
-              document.getElementById("task2-content").innerHTML =
-                latestTest.content.replace(/\n/g, "<br>");
-            }
-
-            // Rasmni chiqarish
-            if (latestTest.image) {
-              const imageBox = document.getElementById("task1-image-box");
-              imageBox.innerHTML = `<img src="${latestTest.image}" alt="Task 1 Chart" style="width: 100%; height: auto; object-fit: contain; border-radius: 6px;">`;
-            }
-          }
-        } catch (err) {
-          console.error("Testni yuklashda xatolik:", err);
-        }
-      }
-
       document
         .getElementById("task1-input")
         .addEventListener("input", function () {
@@ -323,6 +325,15 @@
       async function submitWritingToAI() {
         const task1 = document.getElementById("task1-input").value;
         const task2 = document.getElementById("task2-input").value;
+        const task1Question = document
+          .getElementById("task1-question")
+          .value.trim();
+        const task2Question = document
+          .getElementById("task2-question")
+          .value.trim();
+
+        const imageInput = document.getElementById("task1-image-upload");
+        const imageFile = imageInput.files[0];
         const resultBox = document.getElementById("ai-feedback-result");
 
         if (!task1 && !task2) {
@@ -330,30 +341,79 @@
           return;
         }
 
+        if (imageFile && !imageFile.type.startsWith("image/")) {
+          alert("Iltimos, Task 1 uchun rasm faylini tanlang!");
+          return;
+        }
+
+        if (imageFile && imageFile.size > 10 * 1024 * 1024) {
+          alert("Rasm hajmi 10 MB dan oshmasligi kerak!");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("task1", task1);
+        formData.append("task2", task2);
+        formData.append("task1_question", task1Question);
+        formData.append("task2_question", task2Question);
+
+        if (imageFile) {
+          formData.append("task1_image", imageFile);
+        }
+
         resultBox.style.display = "block";
         resultBox.textContent =
-          "AI imtihon oluvchi esselaringizni tekshirmoqda, iltimos kuting...";
+          "AI esselaringiz va diagrammani tekshirmoqda. Iltimos, kuting...";
 
         try {
-          const response = await fetch(
-            "http://127.0.0.1:5000/api/ai-evaluate",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ task1: task1, task2: task2 }),
-            },
-          );
+          const response = await fetch("/api/ai-evaluate", {
+            method: "POST",
+            body: formData,
+          });
 
           const data = await response.json();
+
           if (data.success) {
             resultBox.textContent = data.feedback;
           } else {
-            resultBox.textContent = "Xatolik: " + data.error;
+            resultBox.textContent =
+              "Xatolik: " + (data.error || "Noma'lum xatolik");
           }
         } catch (err) {
+          console.error("Writing evaluation error:", err);
           resultBox.textContent = "Server bilan aloqada xatolik yuz berdi.";
         }
       }
+
+      document
+        .getElementById("task1-image-upload")
+        .addEventListener("change", function () {
+          const file = this.files[0];
+          const imageBox = document.getElementById("task1-image-box");
+
+          if (!file) {
+            imageBox.textContent = "Rasm hali tanlanmagan";
+            return;
+          }
+
+          if (!file.type.startsWith("image/")) {
+            imageBox.textContent = "Iltimos, rasm faylini tanlang.";
+            this.value = "";
+            return;
+          }
+
+          const imageUrl = URL.createObjectURL(file);
+          imageBox.innerHTML = "";
+
+          const img = document.createElement("img");
+          img.src = imageUrl;
+          img.alt = "Task 1 diagrammasi";
+          img.style.maxWidth = "100%";
+          img.style.maxHeight = "350px";
+          img.style.objectFit = "contain";
+
+          imageBox.appendChild(img);
+        });
     </script>
   </body>
 </html>
